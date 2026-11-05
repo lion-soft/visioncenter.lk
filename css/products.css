@@ -1,0 +1,241 @@
+
+/* =====================================
+   OPTICAL PRODUCTS PAGE
+===================================== */
+
+.catalog-hero {
+    padding: 145px 0 70px;
+    margin-top: -80px;
+    background: linear-gradient(120deg, #f3f6ff, #e5edff, #eaf4ff);
+    text-align: center;
+}
+
+.catalog-hero h1 {
+    font-size: clamp(38px, 5vw, 64px);
+    color: var(--ink);
+    line-height: 1.12;
+    margin: 12px 0;
+}
+
+.catalog-hero h1 span {
+    background: linear-gradient(90deg, var(--ring), var(--blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.catalog-hero p {
+    color: var(--muted);
+    font-size: 17px;
+    margin: 14px auto 24px;
+    max-width: 620px;
+}
+
+.catalog {
+    background: linear-gradient(180deg, #fff, var(--mist));
+}
+
+.catalog-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 22px;
+    margin-bottom: 28px;
+}
+
+.catalog-toolbar h2 {
+    color: var(--ink);
+    font-size: 30px;
+}
+
+.catalog-toolbar p {
+    color: var(--muted);
+    margin: 5px 0;
+}
+
+.catalog-filters {
+    display: flex;
+    gap: 10px;
+    width: min(520px, 100%);
+}
+
+.catalog-filters input,
+.catalog-filters select {
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 14px;
+    min-width: 0;
+}
+
+.catalog-filters input {
+    flex: 1;
+}
+
+.catalog-filters select {
+    width: 180px;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.product-card {
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 12px 35px #0e11600d;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.product-card:hover {
+    box-shadow: 0 20px 45px #5272e026;
+}
+
+.product-image-wrap {
+    height: 250px;
+    background: linear-gradient(135deg, #f3f6ff, #e7edff);
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 12px;
+    transition: transform .5s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+.product-info {
+    padding: 20px;
+}
+
+.product-category {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--blue);
+}
+
+.product-info h3 {
+    font-size: 18px;
+    color: var(--ink);
+    margin: 7px 0;
+}
+
+.product-description {
+    font-size: 13px;
+    color: var(--muted);
+    min-height: 42px;
+    margin: 8px 0 14px;
+}
+
+.product-price {
+    font-weight: 800;
+    color: var(--ring);
+    font-size: 18px;
+}
+
+.product-contact {
+    display: inline-flex;
+    margin-top: 15px;
+    font-weight: 700;
+    color: var(--blue);
+    font-size: 13px;
+    transition: transform .25s ease, color .25s ease;
+}
+
+.product-contact:hover {
+    transform: translateX(5px);
+}
+
+.catalog-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 45px 20px;
+    color: var(--muted);
+    background: #ffffffa8;
+    border: 1px dashed var(--line);
+    border-radius: 20px;
+}
+
+.catalog-cta {
+    text-align: center;
+    padding: 65px 0;
+    background: #eaf0ff;
+}
+
+.catalog-cta h2 {
+    color: var(--ink);
+    font-size: 32px;
+}
+
+.catalog-cta p {
+    color: var(--muted);
+    margin: 10px 0 22px;
+}
+
+
+
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media (max-width: 850px) {
+    .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .catalog-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .catalog-filters {
+        width: 100%;
+    }
+}
+
+@media (max-width: 560px) {
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .catalog-filters {
+        flex-direction: column;
+    }
+
+    .catalog-filters select {
+        width: 100%;
+    }
+
+    .product-image-wrap {
+        height: 230px;
+    }
+}
+
+
+/* =====================================
+   REDUCED MOTION
+===================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    .product-card,
+    .product-image,
+    .product-contact,
+    #navMenu .nav-indicator {
+        transition: none;
+    }
+}

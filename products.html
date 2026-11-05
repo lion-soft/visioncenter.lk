@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+    content="Explore optical frames, sunglasses and lenses at Vision Center Family Eye Care Services.">
+  <title>Optical Products | Vision Center</title>
+  <link rel="icon" href="images/favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/products.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap"
+    rel="stylesheet">
+</head>
+
+<body class="loading products-page">
+
+  <!-- Vision Center Page Loader -->
+  <div class="loader" id="loader" role="status" aria-label="Loading">
+    <div class="loader-card">
+      <div class="loader-eye">
+        <span class="loader-ring"></span>
+        <span class="loader-pupil"></span>
+      </div>
+      <h2>VISION CENTER</h2>
+      <p>Family Eye Care Services</p>
+      <div class="loader-bar"><i></i></div>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html"><img class="brand-mark" src="images/logo2.png" alt="" width="46"
+          height="46"><span><b>Vision Center</b><small>Family Eye Care Services</small></span></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <nav id="navMenu">
+        <a href="index.html">Home</a>
+        <a href="index.html#about">About Us</a><a href="index.html#services">Services</a>
+        <a href="index.html#doctors">Doctors</a>
+        <a href="products.html">Optical Products</a>
+        <a href="index.html#contact">Contact</a>
+      </nav>
+      <a class="btn btn-primary nav-cta" href="index.html#appointment">▦ Book Appointment</a>
+    </div>
+  </header>
+  <main>
+    <section class="catalog-hero">
+      <div class="container"><span class="eyebrow">LOOK GOOD. SEE CLEAR.</span>
+        <h1>Our <span>Optical Collection</span></h1>
+        <p>Find frames and eyewear that fit your style and your vision.</p>
+        <a class="btn btn-primary" href="index.html#appointment">Ask about a product →</a>
+      </div>
+    </section>
+    <section class="section catalog">
+      <div class="container">
+        <div class="catalog-toolbar">
+          <div>
+            <h2>Browse Products</h2>
+            <p id="productCount">Loading collection…</p>
+          </div>
+          <div class="catalog-filters"><input id="productSearch" type="search" placeholder="Search products…"
+              aria-label="Search products"><select id="categoryFilter" aria-label="Filter by category">
+              <option value="all">All categories</option>
+              <option value="Frames">Frames</option>
+              <option value="Sunglasses">Sunglasses</option>
+              <option value="Lenses">Lenses</option>
+              <option value="Accessories">Accessories</option>
+            </select></div>
+        </div>
+        <div id="productGrid" class="product-grid" aria-live="polite">
+          <div class="catalog-message">Loading products…</div>
+        </div>
+        <div id="catalogError" class="catalog-message" hidden></div>
+      </div>
+    </section>
+    <section class="catalog-cta">
+      <div class="container">
+        <h2>Need help choosing?</h2>
+        <p>Contact our team for product availability and guidance.</p><a class="btn btn-primary"
+          href="https://wa.me/94717550750?text=Hello%20Vision%20Center%2C%20I%20would%20like%20to%20ask%20about%20optical%20products."
+          target="_blank" rel="noopener">Chat on WhatsApp →</a>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="container footer-main"><a class="brand brand-light" href="index.html"><img class="brand-mark"
+          src="images/logo.png" alt="" width="46" height="46"><span><b>Vision Center</b><small>Family Eye Care
+            Services</small></span></a>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#services">Services</a>
+        <a href="index.html#doctors">Doctors</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+      <div></div>
+    </div>
+    <div class="copyright">© <span id="year"></span> Vision Center. All rights reserved. Made with ❤️ and <a
+        target="_blank" class="lionsoft" href="https://lionsoft.vercel.app">Lion Soft</a></div>
+  </footer>
+  <script src="js/page-effects.js"></script>
+  <script type="module" src="js/products.js"></script>
+</body>
+
+</html>
