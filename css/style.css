@@ -1437,7 +1437,7 @@ html.has-cursor select {
     }
 }
 
-@media(max-width:760px) {
+@media(max-width: 1110px){
     .header .nav-wrap {
         flex-wrap: wrap;
         min-height: 64px;
@@ -1481,6 +1481,14 @@ html.has-cursor select {
         color: var(--blue)
     }
 
+    .nav-cta,
+    .nav-indicator {
+        display: none
+    }
+}
+
+@media(max-width:760px) {
+    
     .section {
         padding: 60px 0
     }
