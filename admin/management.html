@@ -1,0 +1,277 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Management | Vision Center</title>
+  <link rel="icon" href="../images/favicon.png">
+  <link rel="stylesheet" href="management.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <section id="loginView" class="login-wrap">
+    <form id="loginForm" class="login-card">
+      <img src="../images/logo2.png" alt="Vision Center">
+      <span class="eyebrow">PRIVATE STAFF PORTAL</span>
+      <h1>Admin Login</h1>
+
+      <label>
+        Email
+        <input type="email" name="email" required autocomplete="username">
+      </label>
+
+      <label>
+        Password
+        <input type="password" name="password" required autocomplete="current-password">
+      </label>
+
+      <button type="submit" class="primary">Sign in</button>
+      <p id="loginMessage" class="message"></p>
+    </form>
+  </section>
+
+  <!-- APPLICATION -->
+  <div id="appView" class="app" hidden>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="../images/logo2.png" alt="">
+        <span>
+          VISION CENTER
+          <small>Management</small>
+        </span>
+      </div>
+
+      <nav>
+        <button type="button" class="nav active" data-view="dashboard">▦ <span>Dashboard</span></button>
+        <button type="button" class="nav" data-view="customers">♙ <span>Customers</span></button>
+        <button type="button" class="nav" data-view="orders">▤ <span>Orders</span></button>
+        <button type="button" class="nav" data-view="payments">＄ <span>Payments</span></button>
+        <button type="button" class="nav" data-view="products">◈ <span>Products</span></button>
+      </nav>
+
+      <button type="button" id="logoutBtn" class="logout">Sign out ↗</button>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">VISION CENTER · STAFF</span>
+          <h1 id="pageTitle">Dashboard</h1>
+        </div>
+        <div id="staffEmail" class="staff"></div>
+      </header>
+
+      <p id="globalMessage" class="message"></p>
+
+      <!-- DASHBOARD -->
+      <section id="dashboardView" class="view">
+        <div class="stats">
+          <article><span>Total Customers</span><strong id="statCustomers">0</strong></article>
+          <article><span>Total Orders</span><strong id="statOrders">0</strong></article>
+          <article><span>Pending Orders</span><strong id="statPending">0</strong></article>
+          <article><span>Outstanding Balance</span><strong id="statBalance">Rs. 0</strong></article>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Recent Orders</h2>
+            <button type="button" class="small-btn" data-go="orders">View all</button>
+          </div>
+          <div id="recentOrders" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <!-- CUSTOMERS -->
+      <section id="customersView" class="view" hidden>
+        <div class="toolbar">
+          <input id="customerSearch" placeholder="Search name, customer ID, phone or birthday">
+          <button type="button" id="showCustomerForm" class="primary">+ Add Customer</button>
+        </div>
+
+        <form id="customerForm" class="panel form-grid" hidden>
+          <h2 class="full">Add Customer</h2>
+
+          <label>Customer Name
+            <input name="name" required maxlength="120">
+          </label>
+
+          <label>Customer ID
+            <input name="customerId" required maxlength="40" placeholder="e.g. VC-1025">
+          </label>
+
+          <label>Phone Number
+            <input name="phone" required type="tel" placeholder="947XXXXXXXX">
+          </label>
+
+          <label>Birthday
+            <input name="birthday" type="date">
+          </label>
+
+          <div class="full actions">
+            <button type="submit" class="primary">Save Customer</button>
+            <button type="button" class="secondary" data-cancel="customerForm">Cancel</button>
+          </div>
+
+          <p class="message full" id="customerMessage"></p>
+        </form>
+
+        <div class="panel">
+          <div id="customersTable" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <!-- ORDERS -->
+      <section id="ordersView" class="view" hidden>
+        <div class="toolbar">
+          <input id="orderSearch" placeholder="Search customer, order or item">
+          <button type="button" id="showOrderForm" class="primary">+ New Order</button>
+        </div>
+
+        <form id="orderForm" class="panel form-grid" hidden>
+          <h2 class="full">Create New Order</h2>
+
+          <label class="full">Select Customer
+            <select name="customerId" required>
+              <option value="">Choose customer</option>
+            </select>
+          </label>
+
+          <label>Order / Item Description
+            <input name="description" required maxlength="250" placeholder="e.g. Spectacles, frame and lenses">
+          </label>
+
+          <label>Order Price (LKR)
+            <input name="total" type="number" min="0" step="0.01" required>
+          </label>
+
+          <label>Initial Payment (LKR)
+            <input name="paid" type="number" min="0" step="0.01" value="0" required>
+          </label>
+
+          <label>Order Status
+            <select name="status">
+              <option value="Pending">Pending</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </label>
+
+          <div class="full preview" id="balancePreview">Balance: Rs. 0.00</div>
+
+          <label class="check full">
+            <input name="notify" type="checkbox" checked>
+            Open WhatsApp with order confirmation after saving
+          </label>
+
+          <div class="full actions">
+            <button type="submit" class="primary">Submit Order</button>
+            <button type="button" class="secondary" data-cancel="orderForm">Cancel</button>
+          </div>
+
+          <p class="message full" id="orderMessage"></p>
+        </form>
+
+        <div class="panel">
+          <div id="ordersTable" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <!-- PAYMENTS -->
+      <section id="paymentsView" class="view" hidden>
+        <div class="panel">
+          <h2>Payment History</h2>
+          <div id="paymentsTable" class="table-wrap"></div>
+        </div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section id="productsView" class="view management-products" hidden>
+        <div class="toolbar">
+          <input id="productSearch" type="search" placeholder="Search product name, category or gender">
+          <button type="button" id="showProductForm" class="primary">+ Add Product</button>
+        </div>
+
+        <form id="managementProductForm" class="panel form-grid" hidden>
+          <h2 class="full" id="formTitle">Add New Product</h2>
+
+          <input type="hidden" name="id">
+
+          <label>Product Name
+            <input name="name" required maxlength="100" placeholder="Enter product name">
+          </label>
+
+          <label>Category
+            <select name="category" required>
+              <option value="Frames">Frames</option>
+              <option value="Sunglasses">Sunglasses</option>
+              <option value="Lenses">Lenses</option>
+              <option value="Accessories">Accessories</option>
+            </select>
+          </label>
+
+          <label id="productGenderField">Gender
+            <select name="gender">
+              <option value="both">Both</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </label>
+
+          <label>Price Level
+            <select name="priceLevel" required>
+              <option value="expensive">Expensive</option>
+              <option value="affordable">Affordable</option>
+            </select>
+          </label>
+
+          <label>Price (LKR)
+            <input name="price" type="number" min="0" step="1" placeholder="Leave empty for Price on request">
+          </label>
+
+          <label class="full">Description
+            <textarea name="description" maxlength="500" rows="4" placeholder="Product description"></textarea>
+          </label>
+
+          <label class="full">Product Image
+            <input id="managementImageFile" type="file" accept="image/jpeg,image/png,image/webp">
+            <small class="field-help">JPG, PNG or WEBP · Maximum 5 MB</small>
+          </label>
+
+          <p id="managementUploadStatus" class="full upload-status"></p>
+
+          <label class="check full">
+            <input name="active" type="checkbox" checked>
+            Show on public products page
+          </label>
+
+          <div class="full actions">
+            <button type="submit" id="saveManagementProduct" class="primary">Save Product</button>
+            <button type="button" id="cancelProductEdit" class="secondary" hidden>Cancel</button>
+          </div>
+
+          <p id="managementProductMessage" class="message full"></p>
+        </form>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Product Inventory</h2>
+            <span id="productCount" class="product-count">0 Products</span>
+          </div>
+
+          <div id="managementProductList" class="management-product-list">
+            <p>Loading products…</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="management.js"></script>
+</body>
+</html>
