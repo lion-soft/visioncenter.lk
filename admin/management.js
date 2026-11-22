@@ -156,26 +156,61 @@ async function refresh() {
 // DASHBOARD
 // ======================================
 
-function renderAll() {
-  $("#statCustomers").textContent = customers.length;
-  $("#statOrders").textContent = orders.length;
+// ======================================
+// DASHBOARD
+// ======================================
 
+// Check whether a Firestore date belongs to today
+function isToday(timestamp) {
+  if (!timestamp) return false;
+
+  const date = timestamp?.toDate
+    ? timestamp.toDate()
+    : new Date(timestamp);
+
+  if (isNaN(date.getTime())) return false;
+
+  const today = new Date();
+
+  return (
+    date.getFullYear() === today.getFullYear() &&
+    date.getMonth() === today.getMonth() &&
+    date.getDate() === today.getDate()
+  );
+}
+
+function renderAll() {
+  // Total Customers - All customers
+  $("#statCustomers").textContent = customers.length;
+
+  // Today's orders only
+  const todayOrders = orders.filter(order =>
+    isToday(order.createdAt)
+  );
+
+  // Total Orders - Today's count
+  $("#statOrders").textContent = todayOrders.length;
+
+  // Pending Orders - Keep existing all-time calculation
   $("#statPending").textContent =
     orders.filter(order => order.status === "Pending").length;
 
-  $("#statBalance").textContent = money(
-    orders.reduce(
-      (sum, order) =>
-        sum + Math.max(
-          0,
-          Number(order.total || 0) - Number(order.paid || 0)
-        ),
-      0
-    )
+  // Outstanding Balance - Today's orders only
+  const todayOutstanding = todayOrders.reduce(
+    (sum, order) =>
+      sum + Math.max(
+        0,
+        Number(order.total || 0) - Number(order.paid || 0)
+      ),
+    0
   );
 
+  $("#statBalance").textContent = money(todayOutstanding);
+
+  // Recent Orders - Keep existing behavior
   $("#recentOrders").innerHTML = tableOrders(orders.slice(0, 6));
 
+  // Other sections - Keep existing behavior
   renderCustomers();
   renderOrders();
   renderPayments();
@@ -216,21 +251,19 @@ function tableOrders(rows, showActions = false) {
 
             <td>
               ${money(
-                Number(order.total || 0) - Number(order.paid || 0)
-              )}
+    Number(order.total || 0) - Number(order.paid || 0)
+  )}
             </td>
 
             <td>
-              <span class="pill ${
-                order.status === "Completed" ? "good" : "info"
-              }">
+              <span class="pill ${order.status === "Completed" ? "good" : "info"
+    }">
                 ${esc(order.status)}
               </span>
             </td>
 
-            ${
-              showActions
-                ? `
+            ${showActions
+      ? `
                   <td>
                     <button
                       type="button"
@@ -252,8 +285,8 @@ function tableOrders(rows, showActions = false) {
                     </button>
                   </td>
                 `
-                : ""
-            }
+      : ""
+    }
           </tr>
         `).join("")}
       </tbody>
@@ -358,8 +391,15 @@ function editCustomer(id) {
   form.reset();
   form.dataset.editId = customer.id;
 
+  const savedName = String(customer.name || "").trim();
+  const titleMatch = savedName.match(/^(Mr\.|Ms\.)\s*/i);
+
+  form.elements.title.value = titleMatch
+    ? titleMatch[1].toLowerCase() === "mr." ? "Mr." : "Ms."
+    : "Mr.";
+
   form.elements.customerId.value = customer.customerId || "";
-  form.elements.name.value = customer.name || "";
+  form.elements.name.value = savedName.replace(/^(Mr\.|Ms\.)\s*/i, "");
   form.elements.phone.value = customer.phone || "";
   form.elements.birthday.value = customer.birthday || "";
 
@@ -385,7 +425,9 @@ $("#customerForm").addEventListener("submit", async event => {
   const editId = form.dataset.editId || "";
 
   const customerId = String(data.get("customerId") || "").trim();
-  const name = String(data.get("name") || "").trim();
+  const title = String(data.get("title") || "Mr.").trim();
+  const customerName = String(data.get("name") || "").trim();
+  const name = `${title} ${customerName}`;
   const phone = String(data.get("phone") || "").replace(/[^\d+]/g, "");
   const birthday = String(data.get("birthday") || "");
 
@@ -524,7 +566,7 @@ function formatWhatsAppPhone(phone) {
 
 function createOrderMessage(order, customer) {
   return `
-Hello ${customer.name} 👋
+${customer.name} 👋
 
 Your order at Vision Center has been recorded.
 
@@ -534,7 +576,7 @@ Total: ${money(order.total)}
 Paid: ${money(order.paid)}
 Balance: ${money(order.balance)}
 
-Thank you for choosing Vision Center – Family Eye Care Services! 💙
+Thank you for choosing Vision Center Family Eye Care Services! 💙
 
 We warmly invite you to follow us on our social media platforms to stay updated with our latest offers, promotions, new arrivals, eye care tips and special announcements. 👓✨
 
@@ -1103,43 +1145,38 @@ function renderProducts() {
   }
 
   list.innerHTML = rows.map(product => `
-    <article class="management-product ${
-      product.active === false ? "inactive" : ""
+    <article class="management-product ${product.active === false ? "inactive" : ""
     }">
 
-      ${
-        product.imageUrl
-          ? `<img src="${esc(product.imageUrl)}" alt="${esc(product.name)}" loading="lazy">`
-          : `<div class="preview">No Image</div>`
-      }
+      ${product.imageUrl
+      ? `<img src="${esc(product.imageUrl)}" alt="${esc(product.name)}" loading="lazy">`
+      : `<div class="preview">No Image</div>`
+    }
 
       <div class="management-product-info">
         <h3>${esc(product.name)}</h3>
 
         <p>
           ${esc(product.category || "Uncategorized")}
-          ${
-            ["Frames", "Sunglasses"].includes(product.category)
-              ? ` · ${esc(product.gender || "both")}`
-              : ""
-          }
+          ${["Frames", "Sunglasses"].includes(product.category)
+      ? ` · ${esc(product.gender || "both")}`
+      : ""
+    }
         </p>
 
         <p class="product-price">
-          ${
-            product.price !== null &&
-            product.price !== undefined &&
-            product.price !== ""
-              ? money(product.price)
-              : esc(product.priceLevel || "Price on request")
-          }
+          ${product.price !== null &&
+      product.price !== undefined &&
+      product.price !== ""
+      ? money(product.price)
+      : esc(product.priceLevel || "Price on request")
+    }
         </p>
 
         <p>${esc(product.description || "No description")}</p>
 
-        <span class="product-status ${
-          product.active === false ? "hidden-status" : ""
-        }">
+        <span class="product-status ${product.active === false ? "hidden-status" : ""
+    }">
           ${product.active === false ? "Hidden" : "Visible"}
         </span>
       </div>

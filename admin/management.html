@@ -1,14 +1,17 @@
-
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Management | Vision Center</title>
   <link rel="icon" href="../images/favicon.png">
   <link rel="stylesheet" href="management.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap"
+    rel="stylesheet">
 </head>
+
 <body>
 
   <!-- LOGIN -->
@@ -97,8 +100,15 @@
         <form id="customerForm" class="panel form-grid" hidden>
           <h2 class="full">Add Customer</h2>
 
+          <label>Title
+            <select name="title" required>
+              <option value="Mr.">Mr.</option>
+              <option value="Ms.">Ms.</option>
+            </select>
+          </label>
+
           <label>Customer Name
-            <input name="name" required maxlength="120">
+            <input name="name" required maxlength="120" placeholder="Enter customer name">
           </label>
 
           <label>Customer ID
@@ -274,4 +284,5 @@
 
   <script type="module" src="management.js"></script>
 </body>
+
 </html>
