@@ -271,11 +271,24 @@ function tableOrders(rows, showActions = false) {
                       Edit
                     </button>
 
-                    <button
-                      type="button"
-                      data-order-message="${esc(order.id)}">
-                      Send Message
+                    <div class="whatsapp-action">
+                  <button
+                    type="button"
+                    class="whatsapp-trigger"
+                    data-order-message="${esc(order.id)}">
+                    Send Message ▾
+                  </button>
+
+                  <div class="whatsapp-message-menu" hidden>
+                    <button type="button" data-message-type="recorded">
+                      📋 Order Recorded
                     </button>
+
+                    <button type="button" data-message-type="ready">
+                      ✅ Order Ready
+                    </button>
+                  </div>
+                </div>
 
                     <button
                       type="button"
@@ -564,11 +577,16 @@ function formatWhatsAppPhone(phone) {
   return digits;
 }
 
-function createOrderMessage(order, customer) {
+function createOrderMessage(order, customer, messageType = "recorded") {
+  const isReady = messageType === "ready";
+
   return `
 ${customer.name} 👋
 
-Your order at Vision Center has been recorded.
+${isReady
+      ? "Great news! Your order at Vision Center is now ready! 🎉"
+      : "Your order at Vision Center has been successfully recorded. ✅"
+    }
 
 Order: ${order.orderCode}
 Item: ${order.description}
@@ -578,13 +596,16 @@ Final Total: ${money(order.total)}
 Paid: ${money(order.paid)}
 Balance: ${money(order.balance)}
 
-Thank you for choosing Vision Center Family Eye Care Services! 💙
+${isReady
+      ? "You can visit Vision Center to collect your order. We look forward to seeing you! 😊"
+      : "We will keep you updated about your order. Thank you for choosing Vision Center!"
+    }
 
-We warmly invite you to follow us on our social media platforms to stay updated with our latest offers, promotions, new arrivals, eye care tips and special announcements. 👓✨
+Thank you for choosing Vision Center Family Eye Care Services! 💙
 
 📱 Stay Connected With Us!
 
-🔵 Website : https://www.visioncenter.lk
+🔵 Website: https://www.visioncenter.lk
 🔵 Facebook: https://www.facebook.com/profile.php?id=61571592376431
 🎵 TikTok: https://www.tiktok.com/@vision_center
 ▶️ YouTube: https://www.youtube.com/@VisionCenterGampaha
@@ -595,6 +616,8 @@ Vision Center
 See Better. Live Better. 👁️
   `.trim();
 }
+
+
 
 function sendOrderMessage(id) {
   const order = orders.find(item => item.id === id);
@@ -611,34 +634,67 @@ function sendOrderMessage(id) {
     return;
   }
 
-  const message = createOrderMessage(
-    {
-      orderCode: order.orderCode || order.id,
-      description: order.description,
+  // Remove any previously opened dropdown
+  document.querySelectorAll(".whatsapp-message-menu").forEach(menu => {
+    menu.remove();
+  });
 
-      subtotal: order.subtotal ?? (
-        Number(order.total || 0) + Number(order.discount || 0)
-      ),
-
-      discount: order.discount || 0,
-      total: order.total,
-      paid: order.paid,
-
-      balance: Math.max(
-        0,
-        Number(order.total || 0) - Number(order.paid || 0)
-      )
-    },
-    {
-      name: order.customerName || "Customer"
-    }
+  const button = document.querySelector(
+    `[data-order-message="${CSS.escape(id)}"]`
   );
 
-  const whatsappUrl =
-    `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  if (!button) return;
 
-  window.open(whatsappUrl, "_blank", "noopener");
+  const menu = document.createElement("div");
+  menu.className = "whatsapp-message-menu";
+
+  menu.innerHTML = `
+    <button type="button" data-message-type="recorded">
+      📋 Order Recorded
+    </button>
+
+    <button type="button" data-message-type="ready">
+      ✅ Order Ready
+    </button>
+  `;
+
+  button.insertAdjacentElement("afterend", menu);
+
+  menu.querySelectorAll("[data-message-type]").forEach(option => {
+    option.onclick = () => {
+      const messageType = option.dataset.messageType;
+
+      const message = createOrderMessage(
+        {
+          orderCode: order.orderCode || order.id,
+          description: order.description,
+          subtotal: order.subtotal ?? (
+            Number(order.total || 0) + Number(order.discount || 0)
+          ),
+          discount: order.discount || 0,
+          total: order.total,
+          paid: order.paid,
+          balance: Math.max(
+            0,
+            Number(order.total || 0) - Number(order.paid || 0)
+          )
+        },
+        {
+          name: order.customerName || "Customer"
+        },
+        messageType
+      );
+
+      const whatsappUrl =
+        `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+      window.open(whatsappUrl, "_blank", "noopener");
+
+      menu.remove();
+    };
+  });
 }
+
 
 // ======================================
 // EDIT ORDER
@@ -656,6 +712,10 @@ function editOrder(id) {
   fillCustomerOptions();
 
   form.elements.customerId.value = order.customerRef || "";
+
+  // Order Number
+  form.elements.orderCode.value = order.orderCode || "";
+
   form.elements.description.value = order.description || "";
   form.elements.total.value =
     order.subtotal ?? (
@@ -917,6 +977,23 @@ orderForm.addEventListener("submit", async event => {
   }
 
   const description = String(data.get("description") || "").trim();
+  const orderCode = String(data.get("orderCode") || "").trim();
+
+  if (!orderCode) {
+    say("#orderMessage", "Please enter an Order Number.");
+    return;
+  }
+
+  // Check duplicate Order Numbers
+  const duplicateOrder = orders.some(item =>
+    String(item.orderCode || "").trim().toLowerCase() === orderCode.toLowerCase() &&
+    item.id !== editId
+  );
+
+  if (duplicateOrder) {
+    say("#orderMessage", "This Order Number already exists. Please enter another number.");
+    return;
+  }
 
   if (!description) {
     say("#orderMessage", "Please enter order description.");
@@ -953,6 +1030,7 @@ orderForm.addEventListener("submit", async event => {
       }
 
       const orderData = {
+        orderCode,
         customerRef: customer.id,
         customerId: customer.customerId,
         customerName: customer.name,
@@ -986,7 +1064,7 @@ orderForm.addEventListener("submit", async event => {
             customerRef: customer.id,
             customerId: customer.customerId,
             customerName: customer.name,
-            orderCode: order.orderCode,
+            orderCode,
             amount: paid,
             updatedAt: serverTimestamp()
           });
@@ -1024,7 +1102,6 @@ orderForm.addEventListener("submit", async event => {
     } else {
       // CREATE NEW ORDER
 
-      const orderCode = `VC-${Date.now().toString().slice(-8)}`;
 
       const orderRef = await addDoc(orderCol, {
         orderCode,

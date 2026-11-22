@@ -1845,3 +1845,81 @@ tbody tr:last-child td {
     font-size: 11px !important;
   }
 }
+
+
+/* WhatsApp Message Dropdown */
+.whatsapp-action {
+  position: relative;
+  display: inline-block;
+}
+
+.whatsapp-trigger {
+  background: #25d366;
+  color: #ffffff;
+  border: none;
+  padding: 9px 13px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.whatsapp-trigger:hover {
+  background: #1da851;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+}
+
+.whatsapp-message-menu {
+  position: absolute;
+  top: calc(100% + 7px);
+  right: 0;
+  z-index: 9999;
+  min-width: 190px;
+  padding: 7px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(14, 17, 96, 0.16);
+  animation: whatsappDropdown 0.2s ease;
+}
+
+.whatsapp-message-menu[hidden] {
+  display: none !important;
+}
+
+.whatsapp-message-menu button {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  padding: 11px 12px;
+  margin: 2px 0;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #0e1160;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.whatsapp-message-menu button:hover {
+  background: #f0f5ff;
+  color: #2454c6;
+}
+
+@keyframes whatsappDropdown {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
