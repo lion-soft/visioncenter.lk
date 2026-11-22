@@ -156,11 +156,22 @@
             <input name="description" required maxlength="250" placeholder="e.g. Spectacles, frame and lenses">
           </label>
 
-          <label>Order Price (LKR)
+          <label>
+            Order Price (LKR)
             <input name="total" type="number" min="0" step="0.01" required>
           </label>
 
-          <label>Initial Payment (LKR)
+          <label>
+            Discount (LKR)
+            <input name="discount" type="number" min="0" step="0.01" value="0">
+          </label>
+
+          <div class="full preview" id="finalTotalPreview">
+            Final Total: Rs. 0.00
+          </div>
+
+          <label>
+            Initial Payment (LKR)
             <input name="paid" type="number" min="0" step="0.01" value="0" required>
           </label>
 

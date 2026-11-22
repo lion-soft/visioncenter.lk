@@ -572,7 +572,9 @@ Your order at Vision Center has been recorded.
 
 Order: ${order.orderCode}
 Item: ${order.description}
-Total: ${money(order.total)}
+Order Price: ${money(order.subtotal ?? order.total)}
+Discount: ${money(order.discount || 0)}
+Final Total: ${money(order.total)}
 Paid: ${money(order.paid)}
 Balance: ${money(order.balance)}
 
@@ -582,6 +584,7 @@ We warmly invite you to follow us on our social media platforms to stay updated 
 
 📱 Stay Connected With Us!
 
+🔵 Website : https://www.visioncenter.lk
 🔵 Facebook: https://www.facebook.com/profile.php?id=61571592376431
 🎵 TikTok: https://www.tiktok.com/@vision_center
 ▶️ YouTube: https://www.youtube.com/@VisionCenterGampaha
@@ -612,9 +615,19 @@ function sendOrderMessage(id) {
     {
       orderCode: order.orderCode || order.id,
       description: order.description,
+
+      subtotal: order.subtotal ?? (
+        Number(order.total || 0) + Number(order.discount || 0)
+      ),
+
+      discount: order.discount || 0,
       total: order.total,
       paid: order.paid,
-      balance: Number(order.total || 0) - Number(order.paid || 0)
+
+      balance: Math.max(
+        0,
+        Number(order.total || 0) - Number(order.paid || 0)
+      )
     },
     {
       name: order.customerName || "Customer"
@@ -644,7 +657,12 @@ function editOrder(id) {
 
   form.elements.customerId.value = order.customerRef || "";
   form.elements.description.value = order.description || "";
-  form.elements.total.value = order.total ?? "";
+  form.elements.total.value =
+    order.subtotal ?? (
+      Number(order.total || 0) + Number(order.discount || 0)
+    );
+
+  form.elements.discount.value = order.discount ?? 0;
   form.elements.paid.value = order.paid ?? 0;
   form.elements.status.value = order.status || "Pending";
 
@@ -835,14 +853,22 @@ $("#orderSearch").oninput = renderOrders;
 const orderForm = $("#orderForm");
 
 function updateBalance() {
-  const total = Number(orderForm.elements.total.value || 0);
+  const subtotal = Number(orderForm.elements.total.value || 0);
+  const discount = Number(orderForm.elements.discount.value || 0);
   const paid = Number(orderForm.elements.paid.value || 0);
 
+  const finalTotal = Math.max(0, subtotal - discount);
+  const balance = Math.max(0, finalTotal - paid);
+
+  $("#finalTotalPreview").textContent =
+    `Final Total: ${money(finalTotal)}`;
+
   $("#balancePreview").textContent =
-    `Balance: ${money(total - paid)}`;
+    `Balance: ${money(balance)}`;
 }
 
 orderForm.elements.total.oninput = updateBalance;
+orderForm.elements.discount.oninput = updateBalance;
 orderForm.elements.paid.oninput = updateBalance;
 
 // ======================================
@@ -871,17 +897,22 @@ orderForm.addEventListener("submit", async event => {
     return;
   }
 
-  const total = Number(data.get("total"));
+  const subtotal = Number(data.get("total"));
+  const discount = Number(data.get("discount") || 0);
+  const total = subtotal - discount;
   const paid = Number(data.get("paid"));
 
   if (
     !Number.isFinite(total) ||
     !Number.isFinite(paid) ||
+    subtotal <= 0 ||
+    discount < 0 ||
+    discount > subtotal ||
     total <= 0 ||
     paid < 0 ||
     paid > total
   ) {
-    say("#orderMessage", "Check the order price and payment amount.");
+    say("#orderMessage", "Please check order price, discount and payment amount.");
     return;
   }
 
@@ -927,6 +958,8 @@ orderForm.addEventListener("submit", async event => {
         customerName: customer.name,
         phone: customer.phone,
         description,
+        subtotal,
+        discount,
         total,
         paid,
         balance,
@@ -1000,6 +1033,8 @@ orderForm.addEventListener("submit", async event => {
         customerName: customer.name,
         phone: customer.phone,
         description,
+        subtotal,
+        discount,
         total,
         paid,
         balance,
@@ -1026,6 +1061,8 @@ orderForm.addEventListener("submit", async event => {
       const newOrder = {
         orderCode,
         description,
+        subtotal,
+        discount,
         total,
         paid,
         balance
