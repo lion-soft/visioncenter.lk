@@ -146,10 +146,20 @@
         <form id="orderForm" class="panel form-grid" hidden>
           <h2 class="full">Create New Order</h2>
 
-          <label class="full">Select Customer
-            <select name="customerId" required>
+          <label class="full">
+            Search Customer by ID
+            <input type="text" id="orderCustomerSearch" placeholder="Enter Customer ID (e.g. VC001)"
+              list="orderCustomerSuggestions" autocomplete="off" required>
+
+            <datalist id="orderCustomerSuggestions"></datalist>
+
+            <select name="customerId" id="orderCustomerSelect" hidden required>
               <option value="">Choose customer</option>
             </select>
+
+            <small id="orderCustomerInfo" class="customer-search-info">
+              Enter a Customer ID to find a customer.
+            </small>
           </label>
 
           <label>

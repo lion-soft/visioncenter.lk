@@ -713,6 +713,11 @@ function editOrder(id) {
 
   form.elements.customerId.value = order.customerRef || "";
 
+  $("#orderCustomerSearch").value = order.customerId || "";
+
+  $("#orderCustomerInfo").textContent =
+    `Selected: ${order.customerName || ""} · ${order.phone || ""}`;
+
   // Order Number
   form.elements.orderCode.value = order.orderCode || "";
 
@@ -818,9 +823,11 @@ function renderPayments() {
 // ======================================
 // CUSTOMER OPTIONS
 // ======================================
-
 function fillCustomerOptions() {
-  const select = $("#orderForm").elements.customerId;
+  const form = $("#orderForm");
+  const select = form.elements.customerId;
+  const search = $("#orderCustomerSearch");
+  const suggestions = $("#orderCustomerSuggestions");
 
   const selectedValue = select.value;
 
@@ -832,8 +839,46 @@ function fillCustomerOptions() {
       </option>
     `).join("");
 
-  if (selectedValue) select.value = selectedValue;
+  suggestions.innerHTML = customers.map(customer => `
+    <option value="${esc(customer.customerId)}">
+      ${esc(customer.name)}
+    </option>
+  `).join("");
+
+  if (selectedValue) {
+    select.value = selectedValue;
+  }
 }
+
+const orderCustomerSearch = $("#orderCustomerSearch");
+const orderCustomerSelect = $("#orderCustomerSelect");
+const orderCustomerInfo = $("#orderCustomerInfo");
+
+orderCustomerSearch.addEventListener("input", () => {
+  const searchValue = orderCustomerSearch.value.trim().toLowerCase();
+
+  const customer = customers.find(item =>
+    String(item.customerId || "").trim().toLowerCase() === searchValue
+  );
+
+  if (customer) {
+    orderCustomerSelect.value = customer.id;
+
+    orderCustomerInfo.textContent =
+      `Selected: ${customer.name} · ${customer.phone || ""}`;
+
+    orderCustomerInfo.style.color = "#16803c";
+  } else {
+    orderCustomerSelect.value = "";
+
+    orderCustomerInfo.textContent =
+      searchValue
+        ? "Customer ID not found. Please check the ID."
+        : "Enter a Customer ID to find a customer.";
+
+    orderCustomerInfo.style.color = searchValue ? "#dc2626" : "";
+  }
+});
 
 // ======================================
 // NAVIGATION
