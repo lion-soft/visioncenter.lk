@@ -619,6 +619,7 @@ See Better. Live Better. 👁️
 
 
 
+
 function sendOrderMessage(id) {
   const order = orders.find(item => item.id === id);
 
@@ -634,7 +635,7 @@ function sendOrderMessage(id) {
     return;
   }
 
-  // Remove any previously opened dropdown
+  // Close previously opened menus
   document.querySelectorAll(".whatsapp-message-menu").forEach(menu => {
     menu.remove();
   });
@@ -652,13 +653,12 @@ function sendOrderMessage(id) {
     <button type="button" data-message-type="recorded">
       📋 Order Recorded
     </button>
-
     <button type="button" data-message-type="ready">
       ✅ Order Ready
     </button>
   `;
 
-  button.insertAdjacentElement("afterend", menu);
+  button.parentElement.appendChild(menu);
 
   menu.querySelectorAll("[data-message-type]").forEach(option => {
     option.onclick = () => {
@@ -688,12 +688,13 @@ function sendOrderMessage(id) {
       const whatsappUrl =
         `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
-      window.open(whatsappUrl, "_blank", "noopener");
+      window.open(whatsappUrl, "_blank");
 
       menu.remove();
     };
   });
 }
+
 
 
 // ======================================
