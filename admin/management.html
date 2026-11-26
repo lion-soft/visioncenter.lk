@@ -55,8 +55,8 @@
         <button type="button" class="nav" data-view="orders">▤ <span>Orders</span></button>
         <button type="button" class="nav" data-view="payments">＄ <span>Payments</span></button>
         <button type="button" class="nav" data-view="products">◈ <span>Products</span></button>
+        <button type="button" class="nav" data-view="about">ⓘ <span>About</span></button>
       </nav>
-
       <button type="button" id="logoutBtn" class="logout">Sign out ↗</button>
     </aside>
 
@@ -104,10 +104,6 @@
             <select name="title" required>
               <option value="Mr.">Mr.</option>
               <option value="Ms.">Ms.</option>
-              <option value="Mrs.">Mrs.</option>
-              <option value="Master.">Master.</option>
-              <option value="Baby.">Baby.</option>
-
             </select>
           </label>
 
@@ -138,6 +134,74 @@
         <div class="panel">
           <div id="customersTable" class="table-wrap"></div>
         </div>
+
+
+        <!-- DOCTOR REMINDER MODAL -->
+        <div id="doctorReminderModal" class="doctor-modal" hidden>
+          <div class="doctor-modal-content">
+
+            <div class="doctor-modal-header">
+              <div>
+                <span class="eyebrow">VISION CENTER</span>
+                <h2>Doctor Appointment Reminder</h2>
+              </div>
+              <button type="button" id="closeDoctorReminder" class="secondary">
+                ✕
+              </button>
+            </div>
+
+            <form id="doctorReminderForm" class="form-grid">
+
+              <label class="full">
+                Customer Name
+                <input type="text" id="reminderCustomerName" readonly>
+              </label>
+
+              <label class="full">
+                Customer Phone
+                <input type="text" id="reminderCustomerPhone" readonly>
+              </label>
+
+              <label class="full">
+                Select Doctor
+                <select id="reminderDoctor" required>
+                  <option value="">Choose Doctor</option>
+                  <option>Dr. J. DIAS</option>
+                  <option>DR. WATHSALA PRIYADARSHINI</option>
+                  <option>Dr. D.M. PRIYANKA PARAKRAMA BANDARA</option>
+                  <option>DR. H.A.A. DHARMAWARDENA</option>
+                  <option>DR. PASINDU THILLEKERATNE</option>
+                  <option>DR. SAMINDA PARANAHEWA</option>
+                </select>
+              </label>
+
+              <label>
+                Appointment Date
+                <input type="date" id="reminderDate" required>
+              </label>
+
+              <label>
+                Doctor Arrival Time
+                <input type="time" id="reminderTime" required>
+              </label>
+
+              <div class="full actions">
+                <button type="submit" class="primary">
+                  Send WhatsApp Reminder
+                </button>
+
+                <button type="button" id="cancelDoctorReminder" class="secondary">
+                  Cancel
+                </button>
+              </div>
+
+              <p id="doctorReminderMessage" class="message full"></p>
+
+            </form>
+          </div>
+        </div>
+
+
       </section>
 
       <!-- ORDERS -->
@@ -308,6 +372,133 @@
           </div>
         </div>
       </section>
+
+
+      <!-- ABOUT -->
+      <section id="aboutView" class="view about-view" hidden>
+
+        <div class="about-hero">
+          <img src="../images/logo2.png" alt="Vision Center Logo">
+
+          <span class="eyebrow">ABOUT OUR BUSINESS</span>
+
+          <h2>VISION CENTER</h2>
+          <h3>Family Eye Care Services</h3>
+
+          <p>
+            Clear Vision Brighter Life.
+            Your trusted partner for better eye care and clearer vision.
+          </p>
+
+          <span class="about-version">VISION CENTER MANAGEMENT SYSTEM</span>
+        </div>
+
+        <div class="about-section">
+          <h2>About Our Management System</h2>
+          <p>
+            The Vision Center Management System is designed to simplify
+            daily business operations and improve customer service.
+            It provides an easy way to manage customers, orders, payments,
+            optical products and doctor appointment reminders in one place.
+          </p>
+        </div>
+
+        <div class="about-features">
+          <article>
+            <span>♙</span>
+            <h3>Customer Management</h3>
+            <p>Manage customer details and records.</p>
+          </article>
+
+          <article>
+            <span>▤</span>
+            <h3>Order Management</h3>
+            <p>Create, update and track customer orders.</p>
+          </article>
+
+          <article>
+            <span>＄</span>
+            <h3>Payment Management</h3>
+            <p>Manage payments and outstanding balances.</p>
+          </article>
+
+          <article>
+            <span>◈</span>
+            <h3>Product Management</h3>
+            <p>Manage optical products and inventory.</p>
+          </article>
+
+          <article>
+            <span>♧</span>
+            <h3>Doctor Reminders</h3>
+            <p>Send appointment reminders through WhatsApp.</p>
+          </article>
+        </div>
+
+
+        <!-- LION SOFT DEVELOPER SECTION -->
+        <div class="developer-section">
+
+          <div class="developer-background">
+            <div class="developer-content">
+
+              <img class="developer-logo" src="https://lionsoft.vercel.app/assets/logo2.png" alt="Lion Soft Logo">
+
+              <span class="developer-label">POWERED BY</span>
+
+              <h2 class="developer-title">LION SOFT</h2>
+
+              <div class="developer-line"></div>
+
+              <span class="developer-role">SYSTEM DEVELOPER</span>
+
+              <h3 class="developer-name">Rasula Rasanjana</h3>
+
+              <p class="developer-description">
+                Vision Center Management System is proudly designed
+                and developed under Lion Soft, providing modern
+                digital solutions for Vision Center Family Eye Care Services.
+              </p>
+
+              <div class="developer-contact">
+
+                <a href="tel:0761804819">
+                  <span>☎</span>
+                  076 180 4819
+                </a>
+
+                <a href="https://lionsoft.vercel.app" target="_blank" rel="noopener noreferrer">
+                  <span>🌐</span>
+                  lionsoft.vercel.app
+                </a>
+
+                <a href="https://www.facebook.com/profile.php?id=61594163720669" target="_blank"
+                  rel="noopener noreferrer">
+                  <span>f</span>
+                  Facebook
+                </a>
+
+              </div>
+
+              <div class="developer-powered">
+                DEVELOPED FOR VISION CENTER FAMILY EYE CARE SERVICES
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+        <!-- COPYRIGHT -->
+        <div class="about-copyright-section">
+          <p>© 2026 <strong>VISION CENTER</strong>. All Rights Reserved.</p>
+          <span>Designed & Developed by LION SOFT</span>
+        </div>
+
+
+
+      </section>
+
 
     </main>
   </div>
