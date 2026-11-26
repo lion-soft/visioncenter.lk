@@ -360,6 +360,13 @@ function renderCustomers() {
                 data-customer-delete="${esc(customer.id)}">
                 Delete
               </button>
+
+              <button
+                type="button"
+                class="doctor-reminder-btn"
+                data-customer-reminder="${esc(customer.id)}">
+                Doctor Reminder
+              </button>
             </td>
           </tr>
         `).join("")}
@@ -376,6 +383,13 @@ function renderCustomers() {
     .forEach(button => {
       button.onclick = () => deleteCustomer(button.dataset.customerDelete);
     });
+
+  $("#customersTable").querySelectorAll("[data-customer-reminder]")
+  .forEach(button => {
+    button.onclick = () => {
+      openDoctorReminder(button.dataset.customerReminder);
+    };
+  });
 }
 
 // ======================================
@@ -577,6 +591,189 @@ function formatWhatsAppPhone(phone) {
   return digits;
 }
 
+
+// ======================================
+// DOCTOR APPOINTMENT WHATSAPP REMINDER
+// ======================================
+
+let reminderCustomerId = "";
+
+// Get today's date using local time
+function getLocalToday() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+// Open Doctor Reminder Popup
+function openDoctorReminder(customerId) {
+  const customer = customers.find(item => item.id === customerId);
+
+  if (!customer) {
+    say("#globalMessage", "Customer not found.");
+    return;
+  }
+
+  const form = $("#doctorReminderForm");
+  const modal = $("#doctorReminderModal");
+
+  reminderCustomerId = customer.id;
+
+  form.reset();
+
+  $("#reminderCustomerName").value = customer.name || "";
+  $("#reminderCustomerPhone").value = customer.phone || "";
+
+  // Prevent selecting a past appointment date
+  $("#reminderDate").min = getLocalToday();
+
+  say("#doctorReminderMessage", "");
+
+  modal.hidden = false;
+}
+
+// Close Doctor Reminder Popup
+function closeDoctorReminder() {
+  $("#doctorReminderModal").hidden = true;
+  $("#doctorReminderForm").reset();
+
+  reminderCustomerId = "";
+
+  say("#doctorReminderMessage", "");
+}
+
+// Close button
+$("#closeDoctorReminder").addEventListener("click", closeDoctorReminder);
+
+// Cancel button
+$("#cancelDoctorReminder").addEventListener("click", closeDoctorReminder);
+
+// Close when clicking outside the popup
+$("#doctorReminderModal").addEventListener("click", event => {
+  if (event.target.id === "doctorReminderModal") {
+    closeDoctorReminder();
+  }
+});
+
+// Close with Escape key
+document.addEventListener("keydown", event => {
+  if (
+    event.key === "Escape" &&
+    !$("#doctorReminderModal").hidden
+  ) {
+    closeDoctorReminder();
+  }
+});
+
+// Create and open WhatsApp reminder
+$("#doctorReminderForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const customer = customers.find(
+    item => item.id === reminderCustomerId
+  );
+
+  if (!customer) {
+    say("#doctorReminderMessage", "Customer not found. Please try again.");
+    return;
+  }
+
+  const doctor = $("#reminderDoctor").value;
+  const dateValue = $("#reminderDate").value;
+  const timeValue = $("#reminderTime").value;
+
+  if (!doctor || !dateValue || !timeValue) {
+    say("#doctorReminderMessage", "Please complete all appointment details.");
+    return;
+  }
+
+  if (dateValue < getLocalToday()) {
+    say("#doctorReminderMessage", "Please select today or a future date.");
+    return;
+  }
+
+  const phone = formatWhatsAppPhone(customer.phone);
+
+  if (!phone || phone.length !== 11 || !phone.startsWith("94")) {
+    say("#doctorReminderMessage", "Customer WhatsApp phone number is invalid.");
+    return;
+  }
+
+  // Format appointment date
+  const [year, month, day] = dateValue.split("-").map(Number);
+
+  const appointmentDate = new Date(year, month - 1, day);
+
+  const formattedDate = appointmentDate.toLocaleDateString("en-LK", {
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+
+  // Format arrival time
+  const [hours, minutes] = timeValue.split(":").map(Number);
+
+  const formattedTime = new Date(2000, 0, 1, hours, minutes)
+    .toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true
+    });
+
+  // WhatsApp message
+  const message = `
+Dear ${customer.name} 👋
+
+This is a friendly appointment reminder from Vision Center Family Eye Care Services. 💙
+
+Your doctor appointment details are:
+
+
+👨‍⚕️ Doctor: ${doctor}
+
+📅 Appointment Date: ${formattedDate}
+
+🕒 Doctor Arrival Time: ${formattedTime}
+
+Please arrive on time for your appointment.
+
+Thank you for choosing Vision Center Family Eye Care Services! �
+
+� Stay Connected With Us!
+
+� Website: https://www.visioncenter.lk
+� Facebook: https://www.facebook.com/profile.php?id=61571592376431
+� TikTok: https://www.tiktok.com/@vision_center
+� YouTube: https://www.youtube.com/@VisionCenterGampaha
+
+Your support means a lot to us! �
+
+Vision Center
+See Better. Live Better. �
+  `.trim();
+
+  const whatsappUrl =
+    `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+  const whatsappWindow = window.open(whatsappUrl, "_blank");
+
+  if (!whatsappWindow) {
+    say(
+      "#doctorReminderMessage",
+      "WhatsApp popup was blocked. Please allow popups and try again."
+    );
+    return;
+  }
+
+  closeDoctorReminder();
+
+  say("#globalMessage", "WhatsApp appointment reminder opened successfully.");
+});
+
+
 function createOrderMessage(order, customer, messageType = "recorded") {
   const isReady = messageType === "ready";
 
@@ -619,7 +816,6 @@ See Better. Live Better. 👁️
 
 
 
-
 function sendOrderMessage(id) {
   const order = orders.find(item => item.id === id);
 
@@ -635,7 +831,7 @@ function sendOrderMessage(id) {
     return;
   }
 
-  // Close previously opened menus
+  // Remove any previously opened dropdown
   document.querySelectorAll(".whatsapp-message-menu").forEach(menu => {
     menu.remove();
   });
@@ -653,12 +849,13 @@ function sendOrderMessage(id) {
     <button type="button" data-message-type="recorded">
       📋 Order Recorded
     </button>
+
     <button type="button" data-message-type="ready">
       ✅ Order Ready
     </button>
   `;
 
-  button.parentElement.appendChild(menu);
+  button.insertAdjacentElement("afterend", menu);
 
   menu.querySelectorAll("[data-message-type]").forEach(option => {
     option.onclick = () => {
@@ -688,13 +885,12 @@ function sendOrderMessage(id) {
       const whatsappUrl =
         `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
-      window.open(whatsappUrl, "_blank");
+      window.open(whatsappUrl, "_blank", "noopener");
 
       menu.remove();
     };
   });
 }
-
 
 
 // ======================================
