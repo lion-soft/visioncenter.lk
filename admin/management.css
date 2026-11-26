@@ -579,11 +579,10 @@ textarea {
 .table-wrap {
   width: 100%;
   overflow-x: auto;
-  overflow-y: visible;
+  overflow-y: hidden;
   border-radius: 10px;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e8 transparent;
-  padding-bottom: 100px;
 }
 
 table {
@@ -1922,5 +1921,678 @@ tbody tr:last-child td {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+
+
+/* =========================================================
+   DOCTOR REMINDER — PREMIUM RESPONSIVE MODAL
+========================================================= */
+
+.doctor-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(8, 18, 55, 0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+}
+
+.doctor-modal-content {
+  
+  width: min(540px, 100%);
+  max-height: calc(100vh - 40px);
+  padding: 28px;
+  border: 1px solid #e1e9f8;
+  border-radius: 21px;
+  background: #fff;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, .28);
+  animation: doctorModalEnter .25s ease both;
+}
+
+@keyframes doctorModalEnter {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header */
+
+.doctor-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 24px;
+  padding-bottom: 19px;
+  border-bottom: 1px solid #edf1f8;
+}
+
+.doctor-modal-header .eyebrow {
+  color: #5272d5;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.7px;
+}
+
+.doctor-modal-header h2 {
+  margin: 7px 0 0;
+  color: #172b60;
+  font: 800 19px Sora, sans-serif;
+  line-height: 1.4;
+}
+
+.doctor-modal-header button {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  border: 1px solid #e1e7f1;
+  border-radius: 10px;
+  background: #f5f7fc;
+  color: #53617b;
+  font-size: 16px;
+}
+
+.doctor-modal-header button:hover {
+  background: #fff0f0;
+  color: #c03636;
+}
+
+/* Completely isolate the reminder form */
+
+.doctor-modal-content #doctorReminderForm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  animation: none;
+}
+
+.doctor-modal-content #doctorReminderForm::before {
+  display: none;
+}
+
+.doctor-modal-content #doctorReminderForm > .full {
+  grid-column: 1 / -1;
+}
+
+/* Labels */
+
+.doctor-modal-content #doctorReminderForm label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  min-width: 0;
+  color: #344363;
+  font-size: 12px;
+  font-weight: 750;
+  letter-spacing: .1px;
+}
+
+/* Inputs and dropdown */
+
+.doctor-modal-content #doctorReminderForm input,
+.doctor-modal-content #doctorReminderForm select {
+  width: 100%;
+  min-width: 0;
+  min-height: 47px;
+  padding: 12px 14px;
+  border: 1px solid #dfe6f2;
+  border-radius: 10px;
+  background: #fff;
+  color: #192b50;
+  font-family: Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: none;
+}
+
+.doctor-modal-content #doctorReminderForm input:focus,
+.doctor-modal-content #doctorReminderForm select:focus {
+  border-color: #5272e0;
+  box-shadow: 0 0 0 4px rgba(82, 114, 224, .11);
+}
+
+.doctor-modal-content #doctorReminderForm input[readonly] {
+  background: #f4f7fc;
+  color: #68758f;
+  cursor: default;
+}
+
+/* Date and time */
+
+.doctor-modal-content #reminderDate,
+.doctor-modal-content #reminderTime {
+  cursor: pointer;
+  color-scheme: light;
+}
+
+/* Buttons */
+
+.doctor-modal-content #doctorReminderForm .actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 11px;
+  padding-top: 17px;
+  margin-top: 3px;
+  border-top: 1px solid #edf1f8;
+}
+
+.doctor-modal-content #doctorReminderForm .actions button {
+  min-height: 46px;
+  padding: 12px 17px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.doctor-modal-content #doctorReminderForm .actions .primary {
+  flex: 1;
+  background: linear-gradient(115deg, #16814a, #21a363);
+  box-shadow: 0 6px 15px rgba(22, 129, 74, .18);
+}
+
+.doctor-modal-content #doctorReminderForm .actions .primary:hover {
+  background: linear-gradient(115deg, #116b3d, #16814a);
+  transform: translateY(-1px);
+}
+
+.doctor-modal-content #doctorReminderForm .actions .secondary {
+  min-width: 105px;
+  background: #f0f3fa;
+  color: #52617e;
+  border: 1px solid #e1e7f1;
+}
+
+.doctor-modal-content #doctorReminderForm .actions .secondary:hover {
+  background: #e7ecf6;
+}
+
+/* Feedback message */
+
+.doctor-modal-content #doctorReminderMessage {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* Customer table reminder button */
+
+.table-wrap button.doctor-reminder-btn {
+  background: #eafaf1 !important;
+  color: #16834b !important;
+  border-color: #cceedd !important;
+}
+
+.table-wrap button.doctor-reminder-btn:hover {
+  background: #d8f5e5 !important;
+}
+
+/* Mobile */
+
+@media (max-width: 650px) {
+  .doctor-modal {
+    padding: 12px;
+    align-items: center;
+  }
+
+  .doctor-modal-content {
+    width: 100%;
+    max-height: calc(100vh - 24px);
+    padding: 22px 17px;
+    border-radius: 17px;
+  }
+
+  .doctor-modal-header {
+    margin-bottom: 19px;
+    padding-bottom: 15px;
+  }
+
+  .doctor-modal-header h2 {
+    font-size: 16px;
+  }
+
+  .doctor-modal-content #doctorReminderForm {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .doctor-modal-content #doctorReminderForm > * {
+    grid-column: 1 / -1;
+  }
+
+  .doctor-modal-content #doctorReminderForm .actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .doctor-modal-content #doctorReminderForm .actions button {
+    width: 100%;
+  }
+}
+
+
+/* =========================================
+   ABOUT SCREEN
+========================================= */
+
+.about-view {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.about-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 42px 25px;
+  text-align: center;
+  border-radius: 20px;
+  color: white;
+  background: linear-gradient(125deg, #101b55, #315bd6);
+}
+
+.about-hero img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 20px;
+  background: white;
+}
+
+.about-hero .eyebrow {
+  display: block;
+  color: #cbd8ff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.about-hero h2 {
+  margin: 10px 0 4px;
+  font: 800 27px Sora, sans-serif;
+}
+
+.about-hero h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.about-hero p {
+  max-width: 480px;
+  margin: 17px auto;
+  color: #e0e8ff;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.about-version {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid rgba(255,255,255,.3);
+  border-radius: 30px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+}
+
+.about-section,
+.about-contact {
+  padding: 25px;
+  border: 1px solid #e7ecf5;
+  border-radius: 16px;
+  background: white;
+}
+
+.about-section h2,
+.about-contact h2 {
+  margin: 0 0 13px;
+  color: #172b60;
+  font-size: 17px;
+}
+
+.about-section p,
+.about-contact p {
+  color: #69758d;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.about-features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.about-features article {
+  padding: 22px 18px;
+  border: 1px solid #e7ecf5;
+  border-radius: 15px;
+  background: white;
+}
+
+.about-features article > span {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  color: #315bd6;
+  background: #edf2ff;
+  font-size: 21px;
+}
+
+.about-features h3 {
+  margin: 15px 0 7px;
+  color: #172b60;
+  font-size: 13px;
+}
+
+.about-features p {
+  margin: 0;
+  color: #77839a;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.about-contact a,
+.about-footer a {
+  color: #315bd6;
+  text-decoration: none;
+}
+
+.about-footer {
+  padding: 28px 15px;
+  text-align: center;
+  border-radius: 16px;
+  background: #f0f4fc;
+}
+
+.about-footer p {
+  margin: 0;
+  color: #78849b;
+  font-size: 11px;
+}
+
+.about-footer h3 {
+  margin: 7px 0;
+  color: #172b60;
+  font: 800 20px Sora, sans-serif;
+  letter-spacing: 2px;
+}
+
+.about-footer a {
+  font-size: 12px;
+}
+
+.about-copyright {
+  margin-top: 22px;
+  padding-top: 15px;
+  border-top: 1px solid #dfe6f2;
+  color: #8994a8;
+  font-size: 10px;
+}
+
+@media (max-width: 750px) {
+  .about-features {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .about-features {
+    grid-template-columns: 1fr;
+  }
+
+  .about-hero {
+    padding: 32px 17px;
+  }
+
+  .about-hero h2 {
+    font-size: 23px;
+  }
+}
+
+
+
+/* =========================================
+   PREMIUM LION SOFT DEVELOPER SECTION
+========================================= */
+
+.developer-section {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #101b55;
+  box-shadow: 0 12px 35px rgba(16, 27, 85, 0.16);
+}
+
+.developer-background {
+  position: relative;
+  width: 100%;
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 45px 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(8, 17, 57, 0.94),
+      rgba(20, 43, 111, 0.82),
+      rgba(8, 17, 57, 0.93)
+    ),
+    url("https://lionsoft.vercel.app/assets/hero-lion-office.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.developer-content {
+  width: 100%;
+  max-width: 650px;
+  padding: 38px 28px;
+  text-align: center;
+  color: #ffffff;
+
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 24px;
+
+  background: rgba(255,255,255,0.09);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+}
+
+.developer-logo {
+  width: 105px;
+  height: 105px;
+  object-fit: contain;
+  padding: 10px;
+  border-radius: 22px;
+  border: 1px solid;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.developer-label {
+  display: block;
+  margin-top: 22px;
+  color: #b9ccff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 4px;
+}
+
+.developer-title {
+  margin: 8px 0 0;
+  color: #ffffff;
+  font: 800 34px Sora, sans-serif;
+  letter-spacing: 5px;
+}
+
+.developer-line {
+  width: 55px;
+  height: 3px;
+  margin: 17px auto;
+  border-radius: 10px;
+  background: #8ba9ff;
+}
+
+.developer-role {
+  color: #b9ccff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.developer-name {
+  margin: 10px 0;
+  color: #ffffff;
+  font: 700 22px Sora, sans-serif;
+}
+
+.developer-description {
+  max-width: 500px;
+  margin: 15px auto 25px;
+  color: #e0e8ff;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.developer-contact {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.developer-contact a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 16px;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 12px;
+  color: #ffffff;
+  background: rgba(255,255,255,0.10);
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+
+.developer-contact a:hover {
+  background: rgba(255,255,255,0.23);
+  border-color: #ffffff;
+  transform: translateY(-3px);
+}
+
+.developer-contact a span {
+  color: #c5d5ff;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.developer-powered {
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  color: #c5d5ff;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  line-height: 1.8;
+}
+
+/* COPYRIGHT */
+
+.about-copyright-section {
+  padding: 23px 15px;
+  text-align: center;
+  border-top: 1px solid #e5eaf4;
+}
+
+.about-copyright-section p {
+  margin: 0 0 7px;
+  color: #596783;
+  font-size: 11px;
+}
+
+.about-copyright-section span {
+  color: #8b96aa;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+  .developer-background {
+    min-height: 520px;
+    padding: 25px 13px;
+
+    background-position: center;
+  }
+
+  .developer-content {
+    padding: 28px 16px;
+    border-radius: 19px;
+  }
+
+  .developer-logo {
+    width: 85px;
+    height: 85px;
+  }
+
+  .developer-title {
+    font-size: 27px;
+  }
+
+  .developer-name {
+    font-size: 19px;
+  }
+
+  .developer-description {
+    font-size: 12px;
+  }
+
+  .developer-contact {
+    flex-direction: column;
+  }
+
+  .developer-contact a {
+    justify-content: center;
+  }
+
+  .developer-powered {
+    font-size: 8px;
   }
 }
